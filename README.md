@@ -1,6 +1,6 @@
 # retail_ai
 
-retail_ai_project/
+````retail_ai_project/
 │
 ├── data/
 │   ├── cleaned_data.csv
@@ -25,3 +25,4 @@ retail_ai_project/
 │
 ├── app.py   ← Streamlit dashboard
 └── README.md
+```
