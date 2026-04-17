@@ -1,6 +1,6 @@
 # retail_ai
 
-````retail_ai_project/
+```retail_ai_project/
 │
 ├── data/
 │   ├── cleaned_data.csv
