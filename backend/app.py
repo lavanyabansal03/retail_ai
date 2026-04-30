@@ -148,26 +148,27 @@ def next_purchase():
     scaled = scaler.transform(intervals).reshape(-1, 1, 1)
     raw_preds = model.predict(scaled, verbose=0).flatten()
 
-    # Inverse-transform back to days; fall back to raw if values look wrong
-    try:
-        predicted_days = scaler.inverse_transform(raw_preds.reshape(-1, 1)).flatten()
-        if predicted_days.min() < 0 or predicted_days.max() > 3650:
-            predicted_days = raw_preds
-    except Exception:
-        predicted_days = raw_preds
+    # Model predicts the next full interval; subtract days already elapsed
+    # (Recency) to get days remaining until next purchase
+    predicted_interval = scaler.inverse_transform(raw_preds.reshape(-1, 1)).flatten()
+    days_remaining = predicted_interval - df["Recency"].values
+    days_remaining = np.clip(days_remaining, 0, None)
 
     records = []
     for i, (_, row) in enumerate(df.iterrows()):
-        days = max(0.0, float(predicted_days[i]))
         records.append({
             "customer_id": str(row["Customer ID"]),
             "segment": row["Segment"],
             "avg_interval": round(float(row["Avg_InterPurchase_Interval"]), 1),
-            "predicted_days": round(days, 1),
+            "predicted_days": round(float(days_remaining[i]), 1),
         })
 
     records.sort(key=lambda x: x["predicted_days"])
+    # Show customers whose predicted next purchase is within 30 days
+    # Fall back to top 25 soonest if none qualify
     upcoming = [r for r in records if r["predicted_days"] <= 30]
+    if not upcoming:
+        upcoming = records[:25]
 
     return jsonify({
         "upcoming": upcoming,

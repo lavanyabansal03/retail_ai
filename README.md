@@ -89,3 +89,27 @@ Press **Ctrl+C** to stop both servers.
 - **Next Purchase** — GRU-predicted upcoming purchases + 8-week forecast
 - **Recommendations** — Apriori product association rules
 - **Personalized Offers** — AI-generated offers for highest-risk customers
+
+---
+
+## How It Works
+
+The app is split into a Python backend and a React frontend. The backend loads pre-trained ML models and CSVs at startup, then serves predictions through a REST API. The frontend fetches from that API and renders everything as an interactive dashboard. Vite proxies all `/api` requests from the browser to Flask, so there are no cross-origin issues.
+
+**Data pipeline:**
+Raw transaction data (UCI Online Retail II) was cleaned and engineered into per-customer RFM features — Recency (days since last purchase), Frequency (number of orders), and Monetary (total spend). These features feed every model.
+
+**Segmentation (Segments page):**
+KMeans clustering on RFM scores groups all 5,878 customers into four segments — Champions, Loyal Customers, At Risk, and Lost Customers. The clusters are pre-computed and stored in `customer_features.csv`.
+
+**Churn prediction (Churn Risk page):**
+A Deep Neural Network (DNN) trained on the five RFM features outputs a churn probability (0–1) for each customer. Inputs are standardised with a `StandardScaler` before inference. Customers are ranked highest-to-lowest risk.
+
+**Next purchase prediction (Next Purchase page):**
+A GRU (Gated Recurrent Unit) model predicts each customer's average inter-purchase interval. Days remaining until the next purchase is calculated by subtracting how many days have already passed since their last order (Recency) from that predicted interval.
+
+**Product recommendations (Recommendations page):**
+Apriori association rule mining finds which products are frequently bought together. The top 20 rules by confidence are surfaced, showing antecedent → consequent product pairs with confidence % and lift score.
+
+**Personalized Offers page:**
+Combines churn probability and next-purchase timing to identify the 15 highest-risk customers. Each gets a segment-tailored offer message designed to re-engage them at the moment they are most likely to buy.
