@@ -10,6 +10,8 @@ recommendations and personalised offers.
 
 📊 Project presentation: [docs/Customer_Behavior_Analyzer_presentation.pdf](docs/Customer_Behavior_Analyzer_presentation.pdf)
 
+🤝 Earlier work by teammates, including Kevin's React + Flask version of the dashboard: [contributions/](contributions/)
+
 ## Running the app
 
 Requires Python 3.10–3.12.
