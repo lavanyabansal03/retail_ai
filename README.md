@@ -5,6 +5,11 @@ UCI Online Retail II dataset (2009–2011, 5,878 customers). A Streamlit web app
 brings together customer segmentation, churn prediction, product
 recommendations and personalised offers.
 
+**Team:** Lavanya Bansal · Ridwan Shakoor · Harshita Yangalasetty · Jiya Yadav · Kevin Philip
+(GDSC · Machine Learning Track)
+
+📊 Project presentation: [docs/Customer_Behavior_Analyzer_presentation.pdf](docs/Customer_Behavior_Analyzer_presentation.pdf)
+
 ## Running the app
 
 Requires Python 3.10–3.12.
